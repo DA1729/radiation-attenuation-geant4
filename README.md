@@ -1,7 +1,9 @@
 # Absorption of Beta and Gamma Radiation
 
 **Author**: Daksh Pandey
+
 **Affiliation**: B.Tech (Engineering Physics) at IIT Roorkee
+
 **Course**: PHT-106 (Charged Particles Spectroscopy)
 
 This Geant4 simulation studies the attenuation of radiation from various radioactive sources passing through an Aluminum absorber to determine the linear absorption coefficient ($\mu$).
