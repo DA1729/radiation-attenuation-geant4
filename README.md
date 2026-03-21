@@ -1,61 +1,71 @@
 # Absorption of Beta and Gamma Radiation
 
-This Geant4 simulation studies the attenuation of radiation from various radioactive sources (Ra-226, Sr-90, Cs-137, Co-60) passing through an Aluminum absorber. The goal is to determine the linear absorption coefficient ($\mu$) for each source.
+This Geant4 simulation studies the attenuation of radiation from various radioactive sources passing through an Aluminum absorber to determine the linear absorption coefficient ($\mu$).
 
 ## Building the Project
 
-Ensure you have Geant4 installed and configured.
-
 ```bash
-mkdir -p build
-cd build
+mkdir -p build && cd build
 cmake ..
 make -j$(nproc)
 ```
 
 ## Running the Experiment
 
-The experiment is fully automated with a Python script that:
-1. Runs the Geant4 simulation for each source.
-2. Iterates through absorber thicknesses (0.0 mm to 0.45 mm).
-3. Parses the counts from the detector.
-4. Performs data analysis and generates plots.
-
+The experiment is fully automated:
 ```bash
 python3 run_experiment.py
 ```
 
-## Results Summary
+---
 
-| Source | $\mu$ (mm$^{-1}$) | Primary Radiation |
-| :--- | :--- | :--- |
-| **Sr-90** | 3.6889 | Beta (High Absorption) |
-| **Cs-137** | 0.0182 | Gamma (662 keV) |
-| **Radium (Ra)** | 0.0131 | Gamma (1.0 MeV rep.) |
-| **Co-60** | 0.0089 | Gamma (1.25 MeV rep.) |
+# Experiment Report
 
-Detailed results are available in `results/data/absorption_results.txt`.
+## 1. Results Summary
 
-## Plots and Analysis
+| Source | $\mu$ (mm$^{-1}$) | Primary Radiation | Characteristics |
+| :--- | :--- | :--- | :--- |
+| **Sr-90** | 3.6889 | Beta | High attenuation in thin Aluminum |
+| **Cs-137** | 0.0182 | Gamma (662 keV) | High penetration, low $\mu$ |
+| **Radium (Ra)** | 0.0131 | Gamma (1.0 MeV) | High penetration |
+| **Co-60** | 0.0089 | Gamma (1.25 MeV) | Highest energy, lowest attenuation |
 
-### GM Plateau
-The GM Plateau curve shows the simulated counting efficiency versus operating voltage.
+## 2. GM Plateau Curve
+The Geiger-Muller plateau was simulated by varying the counting efficiency across a voltage range to identify the stable operating region.
 ![GM Plateau](results/plots/gm_plateau.png)
 
-### Strontium-90 (Beta)
-Sr-90 emits beta particles which are significantly attenuated by thin layers of Aluminum.
-![Sr90 Exponential](results/plots/sr90_exponential.png)
-![Sr90 Linear](results/plots/sr90_linear.png)
+---
 
-### Gamma Sources (Ra, Cs-137, Co-60)
-Gamma rays exhibit much lower absorption in Aluminum compared to beta particles, as seen in the near-horizontal linear fits.
-- **Radium**: [Exponential](results/plots/ra_exponential.png) | [Linear](results/plots/ra_linear.png)
-- **Cesium-137**: [Exponential](results/plots/cs137_exponential.png) | [Linear](results/plots/cs137_linear.png)
-- **Cobalt-60**: [Exponential](results/plots/co60_exponential.png) | [Linear](results/plots/co60_linear.png)
+## 3. Absorption Analysis by Source
+
+### Strontium-90 (Beta Radiation)
+Sr-90 shows a rapid exponential decay in count rate as absorber thickness increases, characteristic of beta particle absorption.
+| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
+| :---: | :---: |
+| ![Sr90 Exp](results/plots/sr90_exponential.png) | ![Sr90 Lin](results/plots/sr90_linear.png) |
+
+### Cesium-137 (Gamma Radiation)
+Cs-137 emits 662 keV gammas, which penetrate the Aluminum with minimal attenuation, resulting in a very low $\mu$.
+| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
+| :---: | :---: |
+| ![Cs137 Exp](results/plots/cs137_exponential.png) | ![Cs137 Lin](results/plots/cs137_linear.png) |
+
+### Radium-226 (Gamma Radiation)
+The Radium source was simulated with a 1.0 MeV representative gamma emission, showing high penetration through the Aluminum plates.
+| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
+| :---: | :---: |
+| ![Ra Exp](results/plots/ra_exponential.png) | ![Ra Lin](results/plots/ra_linear.png) |
+
+### Cobalt-60 (Gamma Radiation)
+Co-60 emits high-energy gammas (1.17 and 1.33 MeV), resulting in the lowest linear absorption coefficient in this experiment.
+| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
+| :---: | :---: |
+| ![Co60 Exp](results/plots/co60_exponential.png) | ![Co60 Lin](results/plots/co60_linear.png) |
+
+---
 
 ## Project Structure
-- `src/`, `include/`: Geant4 source code for geometry and physics.
-- `results/plots/`: Generated plots for all experiments.
-- `results/data/`: Tabulated counts and calculated $\mu$ values.
-- `run_experiment.py`: Automation script for running the simulation and analysis.
-- `main.cc`: Entry point for the Geant4 application.
+- `results/plots/`: All generated visualization images.
+- `results/data/`: Tabulated results and calculated $\mu$ values.
+- `run_experiment.py`: Main automation and analysis script.
+- `src/` & `include/`: Geant4 source code for geometry, physics, and scoring.
