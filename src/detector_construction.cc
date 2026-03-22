@@ -26,14 +26,14 @@ G4VPhysicalVolume* detector_construction::Construct() {
   G4Material* absorber_mat = nist->FindOrBuildMaterial(fMaterialName);
   G4Material* det_mat = nist->FindOrBuildMaterial("G4_Ar");
 
-  // World
-  G4Box* world_box = new G4Box("world", 10*cm, 10*cm, 15*cm);
+  // World (larger to accommodate 15 cm thickness)
+  G4Box* world_box = new G4Box("world", 10*cm, 10*cm, 30*cm);
   G4LogicalVolume* world_log = new G4LogicalVolume(world_box, world_mat, "world");
   G4VPhysicalVolume* world_phys = new G4PVPlacement(0, G4ThreeVector(), world_log, "world", 0, false, 0);
 
   // Absorber
-  // Place at z = 5 cm
-  G4double absorber_z = 5.0*cm;
+  // Place at z = 10 cm
+  G4double absorber_z = 10.0*cm;
   if (fThickness > 0) {
     G4Box* absorber_box = new G4Box("absorber", 5*cm, 5*cm, fThickness/2.0);
     fAbsorberLog = new G4LogicalVolume(absorber_box, absorber_mat, "absorber");
@@ -41,10 +41,10 @@ G4VPhysicalVolume* detector_construction::Construct() {
   }
 
   // Detector (GM Counter window area)
-  // Place at z = 10 cm
+  // Place at z = 25 cm
   G4Tubs* det_tubs = new G4Tubs("detector", 0, 1.5*cm, 1*cm, 0, 360*deg);
   G4LogicalVolume* det_log = new G4LogicalVolume(det_tubs, det_mat, "detector");
-  new G4PVPlacement(0, G4ThreeVector(0, 0, 10*cm), det_log, "detector", world_log, false, 0);
+  new G4PVPlacement(0, G4ThreeVector(0, 0, 25*cm), det_log, "detector", world_log, false, 0);
 
   // Visual Attributes
   G4VisAttributes* worldVis = new G4VisAttributes(false);
