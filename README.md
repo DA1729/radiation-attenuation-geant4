@@ -1,73 +1,76 @@
-# Enhanced Absorption Study of Beta and Gamma Radiation
+# Absorption of Beta and Gamma Radiation: A Comparative Simulation Study
 
 **Author:** Daksh Pandey  
 **Course:** PHT-106 (Charged Particles Spectroscopy)  
 **College:** IIT Roorkee
 
-## Overview
-This study utilizes Geant4 simulations to analyze the attenuation of radiation through matter. By employing tailored absorber materials and thickness ranges, we successfully demonstrate the characteristic exponential decay and determine the linear absorption coefficients ($\mu$) for various sources.
-
-## Simulation Setup
-- **Sr-90 (Beta):** Simulated using a Y-90 beta spectrum ($E_{max} = 2.28$ MeV). Absorber: **Aluminum** (0–5 mm).
-- **Gamma Sources (Cs-137, Co-60, Ra-226):** Simulated using characteristic photon energies. Absorber: **Lead** (0–30 mm) to ensure measurable attenuation.
-- **Scoring:** Event-by-event counting in an Argon-filled detector volume.
+## Project Overview
+This project documents the development of a Geant4 simulation to study the absorption of radiation in matter. The study evolved from a basic setup that highlighted the limitations of thin absorbers for gamma radiation to an enhanced model that accurately captures the physics of beta spectra and high-Z attenuation.
 
 ---
 
-## 1. Summary of Results
+## Phase 1: Initial Approach (v1)
+### Setup
+- **Absorber:** Aluminum (0.05 mm to 0.45 mm) for all sources.
+- **Sources:** Mono-energetic particles (1.0 MeV).
 
-| Source | Material | $\mu$ (mm$^{-1}$) | Inferences |
+### Observations & Inferences
+- **Gamma Sources (Ra, Cs, Co):** The plots appeared as **straight lines** with nearly zero slope.
+- **Inference:** Aluminum is too transparent to high-energy gamma rays at sub-millimeter scales. The thickness used was much smaller than the Mean Free Path, causing the exponential decay $e^{-\mu x}$ to behave linearly ($1 - \mu x$).
+- **Beta Source (Sr-90):** Showed significant drop but lacked the characteristic "tail" of a real beta spectrum.
+
+| Sr-90 (v1 - Linear appearance) | Cs-137 (v1 - Flat line) |
+| :---: | :---: |
+| ![Sr90 v1](v1_initial/plots/sr90_v1.png) | ![Cs137 v1](v1_initial/plots/cs137_v1.png) |
+
+*Full v1 results are available in `v1_initial/data/v1_results.txt`.*
+
+---
+
+## Phase 2: Enhanced Experiment (Final Results)
+### Setup Improvements
+- **Beta Spectrum:** Replaced the mono-energetic Sr-90 with a continuous Y-90 beta spectrum ($E_{max}=2.28$ MeV).
+- **High-Z Absorber:** Switched to **Lead (Pb)** for Gamma sources and increased thickness to 30 mm to observe true exponential curvature.
+- **Custom Ranges:** Tailored thickness ranges for each source to capture the most relevant data points.
+
+### Final Results Summary
+
+| Source | Material | $\mu$ (mm$^{-1}$) | Physics Insight |
 | :--- | :--- | :--- | :--- |
-| **Sr-90** | Aluminum | 1.0529 | Characteristic beta range behavior. |
-| **Cs-137** | Lead | 0.1203 | Strong gamma attenuation in high-Z material. |
-| **Ra-226** | Lead | 0.0779 | High energy penetration. |
-| **Co-60** | Lead | 0.0642 | Lowest $\mu$ due to highest photon energy. |
+| **Sr-90** | Aluminum | 1.0529 | Beta spectrum reveals complex range-energy relationship. |
+| **Cs-137** | Lead | 0.1203 | Clear exponential decay observed in high-Z material. |
+| **Ra-226** | Lead | 0.0779 | High penetration energy confirmed. |
+| **Co-60** | Lead | 0.0642 | Lowest $\mu$ matches the highest incident photon energy. |
 
 ---
 
-## 2. Graphical Analysis
+## Graphical Analysis (Final)
 
 ### GM Plateau Curve
-Establishing the stable operating voltage for the Geiger-Muller detector.
+The detector's response plateau was established to ensure stable counting during the experiment.
 ![GM Plateau](results/plots/gm_plateau.png)
 
----
+### Beta Absorption (Sr-90 in Aluminum)
+The spectrum-based simulation shows the characteristic "tail" as higher-energy betas penetrate deeper into the 5 mm Aluminum stack.
+![Sr90 Exp](results/plots/sr90_exponential.png)
 
-### Strontium-90 (Beta in Aluminum)
-With the introduction of a beta spectrum and thicker Aluminum (up to 5 mm), the "tail" of the absorption curve becomes visible as higher energy electrons penetrate deeper.
-| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
+### Gamma Absorption (Cs-137 & Co-60 in Lead)
+Using Lead allows us to see the actual "bend" in the exponential curve, providing a much more accurate fit for the absorption coefficient.
+| Cs-137 (662 keV) | Co-60 (1.25 MeV) |
 | :---: | :---: |
-| ![Sr90 Exp](results/plots/sr90_exponential.png) | ![Sr90 Lin](results/plots/sr90_linear.png) |
+| ![Cs137 Exp](results/plots/cs137_exponential.png) | ![Co60 Exp](results/plots/co60_exponential.png) |
 
 ---
 
-### Cesium-137 (662 keV Gamma in Lead)
-By using Lead as an absorber, we observe a clear exponential decay for gamma radiation, which was previously "flat" in thin Aluminum.
-| Exponential Fit | Linear Fit ($\ln(N)$ vs $x$) |
-| :---: | :---: |
-| ![Cs137 Exp](results/plots/cs137_exponential.png) | ![Cs137 Lin](results/plots/cs137_linear.png) |
+## Final Inferences
+1. **Material Sensitivity:** Gamma rays require high-$Z$ absorbers (like Lead) and significant thickness to exhibit measurable attenuation.
+2. **Energy Dependence:** There is a clear inverse relationship between particle energy and the linear absorption coefficient.
+3. **Beta vs. Gamma:** Charged particles (betas) lose energy significantly faster than uncharged photons (gammas) due to continuous Coulomb interactions.
 
----
+## Project Structure
+- `src/` & `include/`: Current Geant4 source code.
+- `results/`: Final data and plots (Lead absorbers, Beta spectrum).
+- `v1_initial/`: Replication of the first attempt (Aluminum only, mono-energetic).
+- `run_experiment.py`: Main runner for the final experiment.
+- `v1_initial/run_v1.py`: Runner for the initial approach.
 
-### Radium-226 (1.0 MeV Gamma in Lead)
-![Ra Exp](results/plots/ra_exponential.png)
-![Ra Lin](results/plots/ra_linear.png)
-
----
-
-### Cobalt-60 (1.25 MeV Gamma in Lead)
-Co-60 shows the most linear-like exponential behavior because its high energy requires even more Lead to fully stop.
-![Co60 Exp](results/plots/co60_exponential.png)
-![Co60 Lin](results/plots/co60_linear.png)
-
----
-
-## Conclusion
-The enhanced simulation provides a high-fidelity representation of nuclear physics principles:
-1. **Beta particles** exhibit a complex absorption curve due to their continuous energy spectrum and heavy Coulomb interaction.
-2. **Gamma rays** follow the exponential attenuation law $I = I_0 e^{-\mu x}$ clearly when using high-density, high-$Z$ materials like Lead.
-3. The inverse relationship between **incident energy** and **absorption coefficient** is clearly demonstrated across the gamma sources.
-
-## Code Availability
-The simulation framework and analysis scripts are available at:  
-[GitHub: Daksh-Pandey/Absorption-Coefficient-Geant4](https://github.com/Daksh-Pandey/Absorption-Coefficient-Geant4)

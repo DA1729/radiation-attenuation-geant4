@@ -1,6 +1,0 @@
-
-/run/initialize
-/experiment/source Ra
-/experiment/material G4_Pb
-/experiment/thickness 25.0 mm
-/run/beamOn 10000

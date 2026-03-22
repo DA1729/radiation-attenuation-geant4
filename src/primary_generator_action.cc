@@ -13,8 +13,8 @@ primary_generator_action::primary_generator_action()
   G4int n_particle = 1;
   fParticleGun = new G4ParticleGun(n_particle);
 
-  fMessenger = new G4GenericMessenger(this, "/experiment/", "Experiment Control");
-  fMessenger->DeclareMethod("source", &primary_generator_action::SetSource, "Set radioactive source (Ra, Sr90, Cs137, Co60)");
+  fMessenger = new G4GenericMessenger(this, "/experiment/", "experiment control");
+  fMessenger->DeclareMethod("source", &primary_generator_action::SetSource, "set radioactive source");
 
   SetSource("Ra");
 }
@@ -33,7 +33,6 @@ void primary_generator_action::SetSource(G4String source) {
     fParticleGun->SetParticleEnergy(1.0*MeV);
   } else if (fSource == "Sr90") {
     fParticleGun->SetParticleDefinition(table->FindParticle("e-"));
-    // Energy will be set in GeneratePrimaries for the spectrum
   } else if (fSource == "Cs137") {
     fParticleGun->SetParticleDefinition(table->FindParticle("gamma"));
     fParticleGun->SetParticleEnergy(0.662*MeV);
@@ -48,11 +47,8 @@ void primary_generator_action::GeneratePrimaries(G4Event* event) {
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
 
   if (fSource == "Sr90") {
-    // Simulate Y-90 Beta spectrum (Max ~2.28 MeV)
-    // Simple approximation: energy sampled from a distribution
+    // sr-90 beta spectrum
     G4double energy = 2.28 * MeV * G4UniformRand(); 
-    // To make it more "beta-like" (peaking at ~1/3 Emax), we can use a more complex sample
-    // but even a uniform distribution shows the "range" effect better than mono-energetic
     fParticleGun->SetParticleEnergy(energy);
   }
 

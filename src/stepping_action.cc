@@ -11,7 +11,7 @@ void stepping_action::UserSteppingAction(const G4Step* step) {
   G4VPhysicalVolume* volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
   if (!volume) return;
   if (volume->GetName() == "detector") {
-    // Check if it's the first step in the volume
+    // first step in volume
     if (step->GetPreStepPoint()->GetStepStatus() == fGeomBoundary) {
       fRunAction->AddCount();
     }

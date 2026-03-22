@@ -36,9 +36,7 @@ def linear_func(x, a, b):
     return a * x + b
 
 def perform_enhanced_experiment():
-    # Define custom ranges for each source to see the curvature
-    # Sr90: Aluminum (Thin)
-    # Cs, Co, Ra: Lead (Thick)
+    # custom ranges
     configs = [
         {"source": "Sr90", "material": "G4_Al", "thicknesses": np.linspace(0, 5, 10), "label": "Sr-90 (Al)"},
         {"source": "Cs137", "material": "G4_Pb", "thicknesses": np.linspace(0, 20, 10), "label": "Cs-137 (Pb)"},
@@ -51,7 +49,7 @@ def perform_enhanced_experiment():
     for config in configs:
         source = config["source"]
         material = config["material"]
-        print(f"Running experiment for source: {source} with {material}")
+        print(f"running experiment: {source} with {material}")
         rates = []
         for x in config["thicknesses"]:
             rate = run_geant4(source, material, x)
@@ -64,7 +62,7 @@ def plot_and_analyze(results):
     os.makedirs('results/plots', exist_ok=True)
     os.makedirs('results/data', exist_ok=True)
 
-    # Plot 1: GM Plateau (Keep as is)
+    # gm plateau
     voltages = np.arange(300, 650, 20)
     eff = lambda v: 1000 * (1 - np.exp(-(v - 340)/40)) if v > 340 else 0
     counts_v = [eff(v) for v in voltages]
@@ -82,20 +80,20 @@ def plot_and_analyze(results):
     for res in results:
         source = res["source"]
         x = np.array(res["thicknesses"])
-        y = np.array(res["rates"]) * 5000 # Scaling for realism
+        y = np.array(res["rates"]) * 5000 # scale for realism
         material_name = "Lead" if res["material"] == "G4_Pb" else "Aluminum"
         
-        # Exponential fit
+        # exponential fit
         popt_exp, _ = curve_fit(exponential_func, x, y)
         
-        # Linear fit for ln(N)
-        y_log = np.log(y[y > 0])
+        # linear fit
+        y_log = np.log(y[y > 0]) # avoid log(0)
         x_log = x[y > 0]
         popt_lin, _ = curve_fit(linear_func, x_log, y_log)
         mu = -popt_lin[0]
         mu_report.append({"source": source, "mu": mu, "material": material_name, "x": x, "y": y})
 
-        # Exponential plot
+        # exponential plot
         plt.figure(figsize=(8, 6))
         plt.scatter(x, y, color='red', label='Simulated Data')
         x_fit = np.linspace(min(x), max(x), 100)
@@ -108,9 +106,9 @@ def plot_and_analyze(results):
         plt.savefig(f'results/plots/{source.lower()}_exponential.png')
         plt.close()
 
-        # Linear plot
+        # linear plot
         plt.figure(figsize=(8, 6))
-        plt.scatter(x_log, y_log, color='red', label='Data')
+        plt.scatter(x_log, y_log, color='red', label='Simulated Data')
         plt.plot(x_log, linear_func(x_log, *popt_lin), 'b-', label='Linear Fit')
         plt.xlabel(f'Absorber Thickness ({material_name}) x (mm)')
         plt.ylabel('ln(N)')
@@ -123,6 +121,10 @@ def plot_and_analyze(results):
     return mu_report
 
 if __name__ == "__main__":
+    # make directories
+    os.makedirs('results/plots', exist_ok=True)
+    os.makedirs('results/data', exist_ok=True)
+
     results = perform_enhanced_experiment()
     mu_report = plot_and_analyze(results)
     

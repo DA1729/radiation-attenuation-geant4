@@ -1,0 +1,6 @@
+--- v1 initial approach results ---
+
+Source: Ra | mu: 0.0142
+Source: Sr90 | mu: 4.0256
+Source: Cs137 | mu: 0.0207
+Source: Co60 | mu: 0.0131
