@@ -1,4 +1,4 @@
-# Absorption of Beta and Gamma Radiation: A Comparative Simulation Study
+# Absorption of Beta and Gamma Radiation
 
 **Author:** Daksh Pandey  
 **Course:** PHT-106 (Charged Particles Spectroscopy)  
