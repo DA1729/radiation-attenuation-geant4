@@ -15,11 +15,10 @@ This project documents the development of a Geant4 simulation to study the absor
 - **Sources:** Mono-energetic particles (1.0 MeV).
 
 ### Observations & Inferences
-- **Gamma Sources (Ra, Cs, Co):** The plots appeared as **straight lines** with nearly zero slope.
-- **Inference:** Aluminum is too transparent to high-energy gamma rays at sub-millimeter scales. The thickness used was much smaller than the Mean Free Path, causing the exponential decay $e^{-\mu x}$ to behave linearly ($1 - \mu x$).
-- **Beta Source (Sr-90):** Showed significant drop but lacked the characteristic "tail" of a real beta spectrum.
+- **Gamma Sources (Ra, Cs, Co):** The plots showed a **linear appearance**. Because Aluminum is highly transparent to these gammas at sub-millimeter scales, the exponential decay $e^{-\mu x}$ behaves linearly ($1 - \mu x$) over such a short range.
+- **Beta Source (Sr-90):** Showed a clear **exponential appearance** even in thin Aluminum, as beta particles interact much more strongly with matter than photons.
 
-| Sr-90 (v1 - Linear appearance) | Cs-137 (v1 - Flat line) |
+| Sr-90 (v1 - Exponential appearance) | Cs-137 (v1 - Linear appearance) |
 | :---: | :---: |
 | ![Sr90 v1](v1_initial/plots/sr90_v1.png) | ![Cs137 v1](v1_initial/plots/cs137_v1.png) |
 
