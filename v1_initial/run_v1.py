@@ -8,9 +8,9 @@ from scipy.optimize import curve_fit
 def run_geant4(source, material, thickness, events=10000):
     macro = f"""
 /run/initialize
-/experiment/source {source}
-/experiment/material {material}
-/experiment/thickness {thickness} mm
+/experiment/source/set {source}
+/experiment/geom/material {material}
+/experiment/geom/thickness {thickness} mm
 /run/beamOn {events}
 """
     with open("temp.mac", "w") as f:
@@ -60,7 +60,8 @@ def plot_and_analyze_v1(results):
         for res in results:
             source = res["source"]
             x = np.array(res["thicknesses"])
-            y = np.array(res["rates"]) * 5000 
+            # Arbitrary display scale; cancels in the log-linear fit for mu.
+            y = np.array(res["rates"]) * 5000
             
             popt_exp, _ = curve_fit(exponential_func, x, y)
             y_log = np.log(y[y > 0])

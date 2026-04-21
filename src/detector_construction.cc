@@ -11,7 +11,7 @@
 detector_construction::detector_construction()
 : G4VUserDetectorConstruction(), fThickness(0.0*mm), fMaterialName("G4_Al"), fAbsorberLog(nullptr)
 {
-  fMessenger = new G4GenericMessenger(this, "/experiment/", "experiment control");
+  fMessenger = new G4GenericMessenger(this, "/experiment/geom/", "geometry control");
   fMessenger->DeclareMethod("thickness", &detector_construction::SetAbsorberThickness, "set absorber thickness");
   fMessenger->DeclareMethod("material", &detector_construction::SetAbsorberMaterial, "set absorber material");
 }

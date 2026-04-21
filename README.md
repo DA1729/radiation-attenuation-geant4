@@ -28,7 +28,8 @@ This project documents the development of a Geant4 simulation to study the absor
 
 ## Phase 2: Enhanced Experiment (Final Results)
 ### Setup Improvements
-- **Beta Spectrum:** Replaced the mono-energetic Sr-90 with a continuous Y-90 beta spectrum ($E_{max}=2.28$ MeV).
+- **Beta Spectrum:** Replaced the mono-energetic Sr-90 with a continuous Y-90 beta spectrum ($E_{max}=2.28$ MeV), sampled per event from the allowed $\beta$-decay shape $N(T) \propto p\,(T+m_e)\,(T_{max}-T)^2$ (Fermi function omitted; correction is small for Zr daughter, $Z=40$).
+- **Ra-226 Chain:** Gamma energies are sampled per event from the dominant Pb-214 / Bi-214 lines in secular equilibrium (0.242, 0.295, 0.352, 0.609, 0.768, 0.934, 1.120, 1.238, 1.378, 1.764, 2.204 MeV, weighted by photon emission probability) rather than a single 1 MeV line.
 - **High-Z Absorber:** Switched to **Lead (Pb)** for Gamma sources and increased thickness to 30 mm to observe true exponential curvature.
 - **Custom Ranges:** Tailored thickness ranges for each source to capture the most relevant data points.
 
@@ -36,18 +37,14 @@ This project documents the development of a Geant4 simulation to study the absor
 
 | Source | Material | $\mu$ (mm$^{-1}$) | Physics Insight |
 | :--- | :--- | :--- | :--- |
-| **Sr-90** | Aluminum | 1.0529 | Beta spectrum reveals complex range-energy relationship. |
-| **Cs-137** | Lead | 0.1203 | Clear exponential decay observed in high-Z material. |
-| **Ra-226** | Lead | 0.0779 | High penetration energy confirmed. |
-| **Co-60** | Lead | 0.0642 | Lowest $\mu$ matches the highest incident photon energy. |
+| **Sr-90** | Aluminum | 1.2638 | Allowed-shape $\beta$ spectrum (Y-90, $E_{max}=2.28$ MeV) gives a steeper effective attenuation than a uniform distribution. |
+| **Cs-137** | Lead | 0.1203 | Clear exponential decay observed in high-Z material; matches NIST tables at 662 keV. |
+| **Ra-226** | Lead | 0.0969 | Weighted chain spectrum (dominant Pb-214 / Bi-214 lines) has significant sub-MeV contribution, giving a higher $\mu$ than a pure 1 MeV line would. |
+| **Co-60** | Lead | 0.0642 | Lowest $\mu$ matches the highest incident photon energy (1.25 MeV). |
 
 ---
 
 ## Graphical Analysis (Final)
-
-### GM Plateau Curve
-The detector's response plateau was established to ensure stable counting during the experiment.
-![GM Plateau](results/plots/gm_plateau.png)
 
 ### Beta Absorption (Sr-90 in Aluminum)
 The spectrum-based simulation shows the characteristic "tail" as higher-energy betas penetrate deeper into the 5 mm Aluminum stack.

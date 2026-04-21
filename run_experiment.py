@@ -8,9 +8,9 @@ from scipy.optimize import curve_fit
 def run_geant4(source, material, thickness, events=10000):
     macro = f"""
 /run/initialize
-/experiment/source {source}
-/experiment/material {material}
-/experiment/thickness {thickness} mm
+/experiment/source/set {source}
+/experiment/geom/material {material}
+/experiment/geom/thickness {thickness} mm
 /run/beamOn {events}
 """
     with open("temp.mac", "w") as f:
@@ -62,25 +62,17 @@ def plot_and_analyze(results):
     os.makedirs('results/plots', exist_ok=True)
     os.makedirs('results/data', exist_ok=True)
 
-    # gm plateau
-    voltages = np.arange(300, 650, 20)
-    eff = lambda v: 1000 * (1 - np.exp(-(v - 340)/40)) if v > 340 else 0
-    counts_v = [eff(v) for v in voltages]
-    plt.figure(figsize=(8, 6))
-    plt.plot(voltages, counts_v, 'bo-')
-    plt.xlabel('Operating Voltage (V)')
-    plt.ylabel('Count Rate (counts/min)')
-    plt.title('GM Plateau Curve for Radium (Ra)')
-    plt.grid(True)
-    plt.savefig('results/plots/gm_plateau.png')
-    plt.close()
-
     mu_report = []
+
+    # N = (survival fraction from Geant4) * SCALE. SCALE is an arbitrary display
+    # factor to produce counts that "look like" a bench measurement; it cancels
+    # in the log-linear fit used to extract mu, so it does not affect mu.
+    SCALE = 5000
 
     for res in results:
         source = res["source"]
         x = np.array(res["thicknesses"])
-        y = np.array(res["rates"]) * 5000 # scale for realism
+        y = np.array(res["rates"]) * SCALE
         material_name = "Lead" if res["material"] == "G4_Pb" else "Aluminum"
         
         # exponential fit
@@ -129,7 +121,9 @@ if __name__ == "__main__":
     mu_report = plot_and_analyze(results)
     
     with open("results/data/absorption_results.txt", "w") as f:
-        f.write("--- Enhanced Absorption Experiment Results ---\n\n")
+        f.write("--- Enhanced Absorption Experiment Results ---\n")
+        f.write("Note: 'Count Rate N' is (Geant4 survival fraction) * 5000. The\n")
+        f.write("scale is an arbitrary display factor and cancels in the log fit.\n\n")
         for report in mu_report:
             f.write(f"Source: {report['source']} | Material: {report['material']}\n")
             f.write("Thickness (mm) | Count Rate N | ln(N)\n")
